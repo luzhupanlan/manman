@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>php第五天</title>
+  <!-- <link rel="stylesheet" href="lib/css/monokai-sublime.css"> -->
+  <link rel="stylesheet" href="lib/css/default.min.css">
+  <link rel="stylesheet" href="lib/css/vs2015.css">
+  <link rel="stylesheet" href="lib/css/zTreeStyle/zTreeStyle.css">
+  <link rel="stylesheet" href="lib/css/base.css">
+  <link rel="stylesheet" href="lib/css/index.css">
+</head>
+
+<body>
+  <div style='width:25%;'>
+    <ul id="tree" class="ztree" style='width:100%'>
+
+    </ul>
+  </div>
+  <div id='readme' style='width:70%;margin-left:20%;'>
+    <article class='markdown-body'><h1 id="-2-0-">学生管理系统2.0基本功能</h1>
+<h3 id="-">基本功能</h3>
+<ul>
+<li>添加学生功能</li>
+<li>展示学生列表功能</li>
+<li>删除学生功能</li>
+<li>查看学生详情</li>
+<li>更新学生数据</li>
+</ul>
+<h3 id="-">实现思路</h3>
+<p><strong>注册功能思路：</strong></p>
+<ol>
+<li>表单设计，点击提交按钮向服务器提交表单数据</li>
+<li>在后台获取表单提交的数据，保存到数据库中<ul>
+<li>先获取表单的标签的数据</li>
+<li>保存上传的图片（并保存图片存储的路径）</li>
+<li>将表单的数据和图片的路径一起保存到数据库中</li>
+</ul>
+</li>
+</ol>
+<ol>
+<li>保存完成，跳转到列表页，查看新添加的数据</li>
+</ol>
+<p><strong>展示功能思路：</strong></p>
+<ol>
+<li>先从数据库中获取数据（二维数组arr）</li>
+<li>遍历二维数组，将数组中数据渲染到页面中</li>
+</ol>
+<p><strong>删除功能思路：</strong></p>
+<ol>
+<li>获取要删除数据的id</li>
+<li>根据id删除数据库中指定的数据</li>
+<li>删除完毕，返回列表页</li>
+</ol>
+<p><strong>详情展示功能</strong></p>
+<ol>
+<li>获取要查看详情数据的id</li>
+<li>根据id通过联合查询，获取到需要用数据</li>
+<li>把数据显示在页面中</li>
+<li>点击返回按钮，可以返回到列表页</li>
+</ol>
+<p><strong>更新数据思路：</strong>
+更新数据的思路=先渲染  再  提交</p>
+<ol>
+<li>获取要查看详情数据的id</li>
+<li>把对应id的数据填充到修改页面中</li>
+<li>点击修改按钮，获取表单的数据，提交给服务器</li>
+<li>在服务器更新数据</li>
+<li>更新完成后跳转到列表页</li>
+</ol>
+<pre><code class="lang-html">    隐藏域表单：和其他表单标签一样，只是看不到而已
+      &lt;input type=&quot;hidden&quot; name=&quot;id&quot;  value=&quot;&lt;?php echo $data[&#39;id&#39;] ?&gt;&quot;&gt;
+</code></pre>
+<h1 id="cookie-session">COOKIE 和 SESSION</h1>
+<p><strong>会话</strong>：浏览器与服务器之间的数据交流。</p>
+<h3 id="http-">HTTP协议特点：</h3>
+<p><strong>无状态的,  多次请求之间没有相关性</strong></p>
+<blockquote>
+<p> 即同一用户请求同一网站的不同页面，服务器无法识别是否是同一用户发起的请求。因此，用户无法进行连续的业务逻辑。</p>
+</blockquote>
+<p>如：登录，已在A页面登录，请求B页面，提示未登录。</p>
+<h3 id="cookie-session-">cookie 和 session 区分</h3>
+<ul>
+<li><strong>cookie</strong>: 在浏览器端的 存储数据的 容器</li>
+<li><strong>session </strong> 在服务器端的 存储数据的 容器</li>
+</ul>
+<h2 id="cookie">cookie</h2>
+<ul>
+<li><p>在浏览器端的 存储数据的 容器</p>
+</li>
+<li><p>可以使用js对cookie进行操作</p>
+</li>
+<li><p>cookie 允许服务器脚本（PHP脚本）在浏览器端存储数据</p>
+</li>
+<li><p><strong>cookie特点</strong>：在cookie中数据设置后，浏览器再次请求服务器指定页面时，会自动携带cookie中的数据到服务器，在服务器中可以获取cookie中的数据；</p>
+<h3 id="-cookie-">浏览器查看cookie数据</h3>
+<p><img src="img/cookie.png" alt=""></p>
+</li>
+</ul>
+<h3 id="js-cookie-">js操作cookie（了解）</h3>
+<pre><code class="lang-js">// 设置cookie
+document.cookie = &#39;name=zs&#39;; 
+document.cookie = &#39;pwd=123&#39;;   
+
+// 获取cookie中的值
+document.cookie;
+</code></pre>
+<h3 id="jquery-cookie-js-cookie">jquery.cookie.js插件 操作cookie</h3>
+<pre><code class="lang-javascript">//向页面中引入插件js文件，基于jquery的 
+$.cookie(&#39;weight&#39;,100,{expires:7});//设置   expires 过期时间
+$.cookie(&#39;name&#39;);//获取
+$.removeCookie(&#39;name&#39;);//删除    
+
+$.cookie(键,值,{expires:过期天数})
+$.cookie(键) //获取 
+</code></pre>
+<h3 id="php-cookie-cookie-">PHP操作cookie(服务器端操作cookie)</h3>
+<pre><code class="lang-php">    //设置cookie
+    setcookie(&#39;名称&#39;,&#39;值&#39;); 
+    setcookie(&#39;名称&#39;,&#39;值&#39;，&#39;有效期&#39;);
+    //删除cookie  将过期时间设置为之前的时间即可
+    setcookie(&#39;名称&#39;,&#39;&#39;，time()-1000); 
+    //获取cookie  
+    //$_COOKIE是PHP的超全局变量，内部存放有浏览器传过来的cookie数据，$_COOKIE只能用于获取数据
+    $_COOKIE[&#39;名称&#39;];
+</code></pre>
+<p><strong>注意点：</strong></p>
+<ul>
+<li>cookie中的数据 可以被同一个网站的页面所共享</li>
+<li>不同浏览器的cookie 不能共享</li>
+<li>cookie的数据存储在浏览器中，每次请求服务器，在请求报文中携带cookie的数据，发送给服务器</li>
+<li>服务器端无法直接操作cookie，是通过在服务器端设置响应头的的方式，通知浏览器对cookie进行设置，</li>
+<li>cookie中的数据有效期，不设置是会话级别的, 浏览器关闭，会话结束，数据销毁</li>
+<li>cookie存储容量小，约4kb</li>
+</ul>
+<h2 id="session">session</h2>
+<p><img src="img/session.png" alt=""></p>
+<ul>
+<li>在服务器端存储数据的容器</li>
+<li>session容器是一个数组的形式，通过超全局变量$_SESSION 进行取值和设置</li>
+<li>session在使用前，必须先 session_start 开启session 机制</li>
+<li>session中的数据可以被当前网站所共享</li>
+</ul>
+<h3 id="session-">session的基本操作</h3>
+<p><strong>开启session机制</strong>(使用session前必须调用此方法)</p>
+<pre><code class="lang-php"> session_start(); //开启session会话或者重用已经创建的会话。
+</code></pre>
+<p><strong>session_start();的作用：</strong></p>
+<ul>
+<li>在服务器中随机生成一个sessionID</li>
+</ul>
+<ul>
+<li>创建一个session会话文件，用于存储数据（文件名和session的相同，同一个会话只会创建一次）</li>
+</ul>
+<ul>
+<li>在响应头中设置cookie,在cookie中存放本次会话的sessionID</li>
+</ul>
+<p><strong>设置和获取session中的数据</strong>(通过超全局变量$_SESSION进行操作)</p>
+<pre><code class="lang-php">//设置
+$_SESSION[&#39;键&#39;]=&#39;值&#39;; 
+//删除
+unset($_SESSION[&#39;键&#39;]); 
+//清空session
+$_SESSION=[]; 
+//直接删除session会话文件，PHP脚本将无法读取session数据
+session_destroy()
+ //获取session的id
+session_id();
+</code></pre>
+<h1 id="cooke-session-">COOKE 和SESSION的应用--登录状态保持</h1>
+<p>登录模块的基本思路：</p>
+<ol>
+<li><p>如果用户登录成功，在服务器中记录用户的登录状态</p>
+<ul>
+<li><p>执行session_start(), 生产session文件，在session文件中，记录当前用户的信息</p>
+</li>
+<li><p>通过响应头部，给浏览器的cookie设置sessionID</p>
+<pre><code class="lang-php">if($name==&#39;zs&#39;&amp;&amp;$pwd==&#39;666&#39;){
+  //登录成功
+  session_start();
+  $_SESSION[&#39;username&#39;]=$name;
+}
+</code></pre>
+<p>​</p>
+</li>
+</ul>
+</li>
+<li><p>后续访问其他页面（个人中心），浏览器会自动发送cookie中存放的sessionID到服务器</p>
+</li>
+<li><p>服务器会浏览器传递根据sessionID,找到对应的session文件，查看其中是否存放有当前用户的信息</p>
+<ul>
+<li><p>是： 用户已登录 ，正常浏览</p>
+</li>
+<li><p>否：用户未登录，跳转到登录页</p>
+<pre><code class="lang-php">session_start();
+if(!empty($_SESSION[&#39;username&#39;])){
+  //正常浏览
+}else{
+  header(&#39;location:./04-login.html&#39;);
+  die();//后面代码不执行
+}
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+</article>
+  </div>
+</body>
+</html>
+<script type="text/javascript" src="lib/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="lib/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="lib/js/ztree_toc.min.js"></script>
+<script type="text/javascript" src="lib/js/toc_conf.js"></script>
+<script src="lib/js/highlight.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // 代码高亮的js代码
+    hljs.initHighlightingOnLoad();
+
+    //生成侧边栏的代码
+    var css_conf = eval(markdown_panel_style);
+    $('#readme').css(css_conf)
+
+    var conf = eval(jquery_ztree_toc_opts);
+    $('#tree').ztree_toc(conf);
+  });
+</script>
